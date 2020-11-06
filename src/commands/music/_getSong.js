@@ -3,6 +3,7 @@ const Youtube = new (require("popyt").YouTube)(process.env.YOUTUBE_API_KEY);
 
 module.exports = async (song) => {
     const songInfo = await Youtube.getVideo(song);
+    console.log(entities.decode(songInfo.title));
     return {
         title: entities.decode(songInfo.title),
         url: songInfo.url,

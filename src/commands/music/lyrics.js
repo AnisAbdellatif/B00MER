@@ -4,7 +4,7 @@ const Genius = require('genius-lyrics-api');
 module.exports = {
     name: 'lyrics',
     async execute(message, serverQueue) {
-        let query = message.args.join(' ')
+        let query = message.args.join(' ');
 
         if (query.length == 0) {
             if (!serverQueue || serverQueue.songs.length == 0) {
@@ -13,13 +13,18 @@ module.exports = {
             query = serverQueue.songs[0].title;
         }
 
+        if (query.indexOf('[') > -1) query = query.substring(0, query.indexOf('['));
+        const artist = query.split('-')[0].trim();
+        const title = query.split('-')[1] ? query.split('-')[1].trim() : undefined;
+
         const options = {
             apiKey: process.env.GENIUS_API_KEY,
-            title: query,
-            artist: '',
+            artist: title ? artist : '',
+            title: title ? title : query,
             optimizeQuery: true
         };
 
+        console.log(options);
         let song = await Genius.searchSong(options);
         song = song[0];
         const lyrics = await Genius.getLyrics(song.url);
