@@ -26,8 +26,8 @@ for (const file of commandFiles) {
 }
 
 client.on("ready", async () => {
-    client.botConfig = await client.keyv.get("botConfig", client.botConfig);
-    console.log(client.botConfig);
+    client.botConfig = await client.keyv.get("botConfig");
+    console.log(`botConfig: ${client.botConfig}`);
     if (!client.botConfig) {
         client.botConfig = {
             developerID: "343013591232020490",
@@ -113,6 +113,16 @@ client.on("message", async (message) => {
         console.error(error);
         message.reply("An error occured while trying to execute that command!");
     }
+});
+
+client.on("guildCreate", async (guild) => {
+    console.log(`${guild.joinedAt.toLocaleString()}> Joined guild: ${guild.name}<${guild.id}>`)
+    await client.keyv.set(guild.id, client.guildConfig);
+});
+
+client.on("guildDelete", async (guild) => {
+    console.log(`${guild.joinedAt.toLocaleString()}> Left guild: ${guild.name}<${guild.id}>`)
+    await client.keyv.delete(guild.id);
 });
 
 client.login(process.env.DISCORD_BOT_TOKEN);
