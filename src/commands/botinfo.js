@@ -1,12 +1,22 @@
-const Discord = require("discord.js");
+import { MessageEmbed } from "discord.js";
 
-module.exports = {
-    name: 'botinfo',
-    description: 'A list of bot information',
-    dm: true,
+import Command from "../Command.js";
+
+class Botinfo extends Command {
+    constructor() {
+        super({
+            name: "botinfo",
+            description: "A list of bot information.",
+            dm: true,
+        });
+    }
+
     execute(message, args) {
+        let res = super.execute(message, args);
+        if (res) return;
+
         let boticon = message.client.user.displayAvatarURL();
-        let botembed = new Discord.MessageEmbed()
+        let botembed = new MessageEmbed()
             .setDescription("Bot Information")
             .setColor("#00ff00")
             .setThumbnail(boticon)
@@ -14,5 +24,7 @@ module.exports = {
             .addField("Created on", message.client.user.createdAt)
             .addField("Created by", `<@${message.client.dev}>`);
         return message.channel.send(botembed);
-    },
-};
+    }
+}
+
+export default new Botinfo();

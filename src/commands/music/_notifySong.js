@@ -1,11 +1,11 @@
-const { MessageEmbed } = require("discord.js");
+import { MessageEmbed } from "discord.js";
 
-const getPlayTime = require('./_getPlayTime');
-const end = require("./_end");
+import getPlayTime from "./_getPlayTime.js";
 
-module.exports = async (serverQueue, title, rank=0) => {
+export default async (message, title, rank = 0) => {
+    const serverQueue = message.client.serverQueue;
     if (!serverQueue || serverQueue.songs.length == 0) {
-        return serverQueue.textChannel.send("Queue is empty!");
+        return message.channel.send("Queue is empty!");
     }
 
     const song = serverQueue.songs[rank];
@@ -16,7 +16,11 @@ module.exports = async (serverQueue, title, rank=0) => {
         .addField("Song Name:", `${song.title}`, true)
         .addField("Requested By:", song.requestedBy, true)
         .addField("URL:", song.url);
-    if (serverQueue.connection.dispatcher && serverQueue.songs[0].title == song.title && rank == 0) {
+    if (
+        serverQueue.connection.dispatcher &&
+        serverQueue.songs[0].title == song.title &&
+        rank == 0
+    ) {
         songEmbed.addField(
             "Duration:",
             `${getPlayTime(serverQueue)}/${song.duration}`
@@ -26,4 +30,4 @@ module.exports = async (serverQueue, title, rank=0) => {
     }
 
     return serverQueue.textChannel.send(songEmbed);
-}
+};

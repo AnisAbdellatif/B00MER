@@ -1,8 +1,20 @@
-const notifySong = require('./_notifySong');
+import Command from "../../Command.js";
+import notifySong from "./_notifySong.js";
 
-module.exports = {
-    name: 'np',
-    async execute(message, serverQueue) {
-        notifySong(serverQueue, "Now Playing:");
-    },
-};
+class Np extends Command {
+    constructor() {
+        super({
+            name: "np",
+            description: "Show the current song.",
+        });
+    }
+
+    execute(message, args) {
+        let res = super.execute(message, args);
+        if (res) return;
+
+        notifySong(message, "Now Playing:");
+    }
+}
+
+export default new Np();

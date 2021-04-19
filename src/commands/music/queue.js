@@ -1,11 +1,21 @@
-const { MessageEmbed } = require("discord.js");
-const { get } = require("request");
+import { MessageEmbed } from "discord.js";
 
-const getPlayTime = require('./_getPlayTime');
+import Command from "../../Command.js";
+import getPlayTime from "./_getPlayTime.js";
 
-module.exports = {
-    name: 'queue',
-    async execute(message, serverQueue) {
+class Queue extends Command {
+    constructor() {
+        super({
+            name: "queue",
+            description: "Get the song queue.",
+        });
+    }
+
+    execute(message, args) {
+        let res = super.execute(message, args);
+        if (res) return;
+
+        const serverQueue = message.client.serverQueue;
         if (!serverQueue)
             return message.reply(
                 "Oida mate, i have no shit to say :zany_face: (no songs)"
@@ -19,10 +29,18 @@ module.exports = {
         serverQueue.songs.forEach((song) => {
             songEmbed.addField(
                 `#${n} - ${song.title}`,
-                `Requested by: ${song.requestedBy}${n == 0 ? `; Played: ${getPlayTime(serverQueue)}/${song.duration}` : ''}`,
+                `Requested by: ${song.requestedBy}${
+                    n == 0
+                        ? `; Played: ${getPlayTime(serverQueue)}/${
+                              song.duration
+                          }`
+                        : ""
+                }`
             );
             n += 1;
         });
         return serverQueue.textChannel.send(songEmbed);
-    },
-};
+    }
+}
+
+export default new Queue();

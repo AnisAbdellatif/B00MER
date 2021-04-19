@@ -1,25 +1,40 @@
-const validateNum = require('./_validateNumber');
-const skip = require('./skip').execute;
+import Command from "../../Command.js";
+import skip from "./skip.js";
 
-module.exports = {
-    name: 'remove',
-    async execute(message, serverQueue) {
+class Remove extends Command {
+    constructor() {
+        super({
+            name: "remove",
+            description: "Remove song from queue.",
+            argsRules: {
+                songRank: "required|integer",
+            },
+        });
+    }
+
+    execute(message, args) {
+        let res = super.execute(message, args);
+        if (res) return;
+
+        const serverQueue = message.client.serverQueue;
         if (!message.member.voice.channel)
             return message.channel.send(
                 "You have to be in a voice channel to remove a song!"
             );
         else if (!serverQueue)
-            return message.channel.send("There is no song that I could remove!");
-        
-        const rank = validateNum(message.args[0], 0, serverQueue.songs.length - 1)
-        if (rank == 0) {
-            return skip(message, serverQueue);
-        }
-        if (rank) {
-            return serverQueue.songs.splice(rank, 1);
+            return message.channel.send(
+                "There is no song that I could remove!"
+            );
+
+        const rank = this.args.songRank;
+        if (!(serverQueue.songs.length > rank && rank >= 0)) {
+            return message.channel.send("Verify the number you inserted!");
+        } else if (rank == 0) {
+            return skip.execute(message, args);
         } else {
-            return message.channel.send("Verify the number you inserted!")
+            return serverQueue.songs.splice(rank, 1);
         }
-        
-    },
-};
+    }
+}
+
+export default new Remove();

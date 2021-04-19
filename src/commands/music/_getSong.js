@@ -1,15 +1,15 @@
-const entities = new (require("html-entities").XmlEntities)();
-const Youtube = new (require("popyt").YouTube)(process.env.YOUTUBE_API_KEY);
+import { decode } from "html-entities";
+import { YouTube } from "popyt";
+const YoutubeAPI = new YouTube(process.env.YOUTUBE_API_KEY);
 
-module.exports = async (song) => {
-    const songInfo = await Youtube.getVideo(song);
-    console.log(entities.decode(songInfo.title));
+export default async (song) => {
+    const songInfo = await YoutubeAPI.getVideo(song);
     return {
-        title: entities.decode(songInfo.title),
+        title: decode(songInfo.title),
         url: songInfo.url,
         thumbnail: songInfo.thumbnails.maxres
             ? songInfo.thumbnails.maxres.url
             : songInfo.thumbnails.high.url,
         duration: `${songInfo.minutes}m ${songInfo.seconds}s`,
     };
-}
+};

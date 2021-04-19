@@ -1,9 +1,20 @@
-const execute = require('./_execute');
+import Command from "../../Command.js";
+import execute from "./_execute.js";
 
-module.exports = {
-    name: 'seek',
-    async execute(message, serverQueue) {
-        const args = message.args;
-        execute(serverQueue, args[0]);
-    },
-};
+class Seek extends Command {
+    constructor() {
+        super({
+            name: "seek",
+            description: "Seek ahead in a song.",
+        });
+    }
+
+    execute(message, args) {
+        let res = super.execute(message, args);
+        if (res) return;
+
+        execute(message, args, this.args[0]);
+    }
+}
+
+export default new Seek();

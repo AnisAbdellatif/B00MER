@@ -1,9 +1,11 @@
-require("dotenv").config();
-const fs = require("fs");
-const Keyv = require("keyv");
+import { config } from "dotenv";
+import { readdirSync } from "fs";
+import Keyv from "keyv";
 
-const { Client, Collection } = require("discord.js");
+import { Client, Collection } from "discord.js";
 const client = new Client();
+
+config();
 
 client.keyv = new Keyv(process.env.DATABASE_URL);
 client.keyv.on("error", (err) => {
@@ -17,11 +19,11 @@ client.guildConfig = {
 
 client.commands = new Collection();
 
-const commandFiles = fs
-    .readdirSync("src/commands/")
-    .filter((file) => file.endsWith(".js"));
+const commandFiles = readdirSync("src/commands/").filter((file) =>
+    file.endsWith(".js")
+);
 for (const file of commandFiles) {
-    const command = require(`./commands/${file}`);
+    const command = (await import(`./commands/${file}`)).default;
     client.commands.set(command.name, command);
 }
 
@@ -55,7 +57,7 @@ client.on("message", async (message) => {
     } else {
         while (true) {
             try {
-                guildDB = await client.keyv.get(message.guild.id);
+                let guildDB = await client.keyv.get(message.guild.id);
                 if (!guildDB) {
                     await client.keyv.set(message.guild.id, client.guildConfig);
                     prefix = client.guildConfig.prefix;
@@ -65,6 +67,7 @@ client.on("message", async (message) => {
                 break;
             } catch (error) {
                 console.log("Reconnecting to db!");
+                console.error(error);
                 client.keyv = new Keyv(process.env.DATABASE_URL);
                 client.keyv.on("error", (err) => {
                     console.log("Connection Error", err);
@@ -83,29 +86,14 @@ client.on("message", async (message) => {
         let command = client.commands.get(commandName);
 
         if (!command) {
-            command = client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName))
-            if (!command) return message.reply(
-                `This command sadly does not exist! \:face_with_monocle:`
+            command = client.commands.find(
+                (cmd) => cmd.aliases && cmd.aliases.includes(commandName)
             );
+            if (!command)
+                return message.reply(
+                    `This command sadly does not exist! \:face_with_monocle:`
+                );
             command.calledBy = commandName;
-        }
-
-        if (client.botConfig.disabledCmds.includes(command.name)) {
-            return message.reply(
-                `Sorry, this command is currently disabled by the developer \:pleading_face:\nFor more information contact <@${client.dev}>`
-            );
-        } else if (message.channel.type == "dm" && !command.dm) {
-            return message.reply(
-                "I can only execute this command inside a server! \:wink:"
-            );
-        } else if (command.dev && message.author.id != client.dev) {
-            return message.reply(
-                `You are not allow to do that -_- Ask <@${client.dev}> to do it.`
-            );
-        } else if (command.permissions && !message.member.hasPermission(command.permissions)) {
-            return message.reply(`You don't have permission to execute that command!`)
-        } else if (command.botpermissions && !message.guild.member(message.client.user).hasPermission(command.permissions)) {
-            return message.reply(`Give me the permission to execute that command!`)
         }
 
         await command.execute(message, args);
@@ -116,12 +104,20 @@ client.on("message", async (message) => {
 });
 
 client.on("guildCreate", async (guild) => {
-    console.log(`${guild.joinedAt.toLocaleString()}> Joined guild: ${guild.name}<${guild.id}>`)
+    console.log(
+        `${guild.joinedAt.toLocaleString()}> Joined guild: ${guild.name}<${
+            guild.id
+        }>`
+    );
     await client.keyv.set(guild.id, client.guildConfig);
 });
 
 client.on("guildDelete", async (guild) => {
-    console.log(`${guild.joinedAt.toLocaleString()}> Left guild: ${guild.name}<${guild.id}>`)
+    console.log(
+        `${guild.joinedAt.toLocaleString()}> Left guild: ${guild.name}<${
+            guild.id
+        }>`
+    );
     await client.keyv.delete(guild.id);
 });
 

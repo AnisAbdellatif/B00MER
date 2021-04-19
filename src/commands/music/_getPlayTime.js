@@ -1,5 +1,7 @@
-const prettyMilliseconds = require("pretty-ms");
+import prettyMilliseconds from "pretty-ms";
 
-module.exports = (serverQueue) => {
-    return prettyMilliseconds(serverQueue.connection.dispatcher.streamTime, { secondsDecimalDigits: 0 })
-}
+export default (serverQueue) => {
+    return prettyMilliseconds(serverQueue.connection.dispatcher.streamTime, {
+        secondsDecimalDigits: 0,
+    });
+};
