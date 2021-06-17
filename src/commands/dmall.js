@@ -1,4 +1,5 @@
 import Command from "../Command.js";
+import Logger from "../Logger.js";
 
 class Dmall extends Command {
     constructor() {
@@ -31,12 +32,9 @@ class Dmall extends Command {
             if (member.user.bot || member.user.id == message.author.id) return;
             try {
                 await member.user.send(this.args);
-                console.log(member.user.username);
                 members_success.push(member.user.username);
             } catch (error) {
-                // console.log(error);
-                // console.log(member.user.username);
-                console.error(
+                Logger.error(
                     `Could not send DM to ${member.user.username} in a request in ${message.guild.name} (${message.guild.id}).\n`,
                     error
                 );
@@ -54,8 +52,8 @@ class Dmall extends Command {
                     `The message didn\'t reach those people:\n ${members_error}`
                 );
             }
-            console.log(`success: ${members_success}`);
-            console.log(`failure: ${members_error}`);
+            Logger.debug(`success: ${members_success}`);
+            Logger.debug(`failure: ${members_error}`);
         });
     }
 }

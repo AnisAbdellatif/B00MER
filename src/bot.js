@@ -7,9 +7,12 @@ const client = new Client();
 
 config();
 
+import Logger from "./Logger.js";
+import * as Errors from "./customErrors.js";
+
 client.keyv = new Keyv(process.env.DATABASE_URL);
 client.keyv.on("error", (err) => {
-    console.log("Connection Error", err);
+    Logger.error(`Connection Error: ${err}`);
     process.exit(1);
 });
 
@@ -29,7 +32,7 @@ for (const file of commandFiles) {
 
 client.on("ready", async () => {
     client.botConfig = await client.keyv.get("botConfig");
-    console.log(`botConfig: ${client.botConfig}`);
+    Logger.debug(`botConfig: ${JSON.stringify(client.botConfig)}`);
     if (!client.botConfig) {
         client.botConfig = {
             developerID: "343013591232020490",
@@ -40,14 +43,14 @@ client.on("ready", async () => {
     await client.keyv.set("guildConfig", client.guildConfig);
 
     // List servers the bot is connected to
-    console.log("Servers:");
+    Logger.info("Servers:");
     client.guilds.cache.each((guild) => {
-        console.log(` -- ${guild.name} - ${guild.id}`);
+        Logger.info(`   -- ${guild.name} - ${guild.id}`);
     });
 
     client.user.setActivity(`Type ${client.guildConfig.prefix}help`);
     client.dev = client.botConfig.developerID;
-    console.log(`${client.user.username} is online!`);
+    Logger.info(`${client.user.username} is online!`);
 });
 
 client.on("message", async (message) => {
@@ -66,13 +69,13 @@ client.on("message", async (message) => {
                 }
                 break;
             } catch (error) {
-                console.log("Reconnecting to db!");
-                console.error(error);
-                client.keyv = new Keyv(process.env.DATABASE_URL);
-                client.keyv.on("error", (err) => {
-                    console.log("Connection Error", err);
-                    process.exit(1);
-                });
+                // Logger.error(error);
+                // Logger.warn("Reconnecting to db!");
+                // client.keyv = new Keyv(process.env.DATABASE_URL);
+                // client.keyv.on("error", (err) => {
+                //     Logger.error(`Connection Error: ${err}`);
+                //     process.exit(1);
+                // });
             }
         }
     }
@@ -95,16 +98,22 @@ client.on("message", async (message) => {
                 );
             command.calledBy = commandName;
         }
-
-        await command.execute(message, args);
+        try {
+            await command.execute(message, args);
+        } catch (error) {
+            if (error instanceof Errors.CustomError) {
+                message.reply(error.message);
+            }
+            Logger.error(error);
+        }
     } catch (error) {
-        console.error(error);
+        Logger.error(error);
         message.reply("An error occured while trying to execute that command!");
     }
 });
 
 client.on("guildCreate", async (guild) => {
-    console.log(
+    Logger.info(
         `${guild.joinedAt.toLocaleString()}> Joined guild: ${guild.name}<${
             guild.id
         }>`
@@ -113,7 +122,7 @@ client.on("guildCreate", async (guild) => {
 });
 
 client.on("guildDelete", async (guild) => {
-    console.log(
+    Logger.info(
         `${guild.joinedAt.toLocaleString()}> Left guild: ${guild.name}<${
             guild.id
         }>`

@@ -2,6 +2,7 @@ import { MessageEmbed } from "discord.js";
 import request from "request";
 
 import Command from "../Command.js";
+import Logger from "../Logger.js";
 
 class Bitcoin extends Command {
     constructor() {
@@ -21,7 +22,7 @@ class Bitcoin extends Command {
             async function (error, response, body) {
                 if (error) {
                     message.reply("Error getting the bitcoin prices!");
-                    return console.log(error);
+                    return Logger.error(error);
                 }
 
                 const updated = body.time.updated;
@@ -45,7 +46,7 @@ class Bitcoin extends Command {
                     async function (error, response, body) {
                         if (error) {
                             message.reply("Error getting the bitcoin prices!");
-                            return console.log(error);
+                            return Logger.error(error);
                         }
 
                         const tnd = body.bpi.TND.rate;

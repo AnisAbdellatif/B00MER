@@ -18,7 +18,7 @@ class Resume extends Command {
             return message.reply(
                 "Oida mate, i have no shit to say :zany_face: (no songs)"
             );
-        console.log(serverQueue.connection.dispatcher.resume);
+
         serverQueue.connection.dispatcher.resume();
         serverQueue.connection.dispatcher.pause();
         serverQueue.connection.dispatcher.resume();

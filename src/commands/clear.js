@@ -1,4 +1,5 @@
 import Command from "../Command.js";
+import Logger from "../Logger.js";
 
 class Clear extends Command {
     constructor() {
@@ -20,7 +21,9 @@ class Clear extends Command {
             while (true) {
                 await message.channel.messages.fetch({ limit: n }, true, true);
                 const messages = await message.channel.bulkDelete(n, true);
-                console.log(`deleted ${messages.size} messages!`);
+                Logger.debug(
+                    `deleted ${messages.size} messages from '${mesage.guild.name}'!`
+                );
                 if (
                     this.args[0] ||
                     (await message.channel.messages.cache.array().length) == 0

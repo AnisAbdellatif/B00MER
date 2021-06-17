@@ -50,7 +50,6 @@ class Lyrics extends Command {
             optimizeQuery: true,
         };
 
-        console.log(options);
         let song = await searchSong(options);
         song = song[0];
         const lyrics = await getLyrics(song.url);

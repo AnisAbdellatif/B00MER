@@ -6,8 +6,7 @@ class Vote extends Command {
         super({
             name: "vote",
             description: "Create a vote",
-            usage:
-                "vote [poll title] [array of available options (max 10)] [time in seconds]",
+            usage: "[poll title] [array of available options (max 10)] [time in seconds]",
         });
     }
 
@@ -21,10 +20,6 @@ class Vote extends Command {
     execute(message, args) {
         let res = super.execute(message, args);
         if (res) return;
-
-        // console.log(title);
-        // console.log(options);
-        // console.log(timeout);
 
         return pollEmbed(message, this.args[0], this.args[1], this.args[2]);
     }
