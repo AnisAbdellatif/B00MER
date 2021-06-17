@@ -12,8 +12,7 @@ class Queue extends Command {
     }
 
     execute(message, args) {
-        let res = super.execute(message, args);
-        if (res) return;
+        super.execute(message, args);
 
         const serverQueue = message.client.serverQueue;
         if (!serverQueue)

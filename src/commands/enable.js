@@ -12,8 +12,7 @@ class Enable extends Command {
     }
 
     async execute(message, args) {
-        let res = super.execute(message, args);
-        if (res) return;
+        super.execute(message, args);
 
         const command = message.client.commands.get(this.args[0]);
         const botConfig = message.client.botConfig;

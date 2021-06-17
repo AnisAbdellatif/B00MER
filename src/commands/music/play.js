@@ -25,8 +25,7 @@ class Play extends Command {
     }
 
     async execute(message, args) {
-        let res = super.execute(message, args);
-        if (res) return;
+        super.execute(message, args);
 
         let serverQueue = message.client.serverQueue;
         let songs = this.args.songName;

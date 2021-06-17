@@ -11,8 +11,7 @@ class Move extends Command {
     }
 
     execute(message, args) {
-        let res = super.execute(message, args);
-        if (res) return;
+        super.execute(message, args);
 
         const serverQueue = message.client.serverQueue;
         if (isNaN(this.args[0]) || isNaN(this.args[1]))

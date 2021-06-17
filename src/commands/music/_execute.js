@@ -6,10 +6,11 @@ const f = async (message, args, seek) => {
     const serverQueue = message.client.serverQueue;
     const song = serverQueue.songs[0];
     if (!song) return;
-    const stream = await ytdl(song.url, {
-        filter: "audioonly",
-        quality: "highestaudio",
-    });
+    const stream = ytdl(song.url);
+    // const stream = ytdl(song.url, {
+    //     filter: "audioonly",
+    //     quality: "highestaudio",
+    // });
     // const stream = await ytdl(song.url, { quality: "highestaudio", filter: "audioonly", highWaterMark: 50 });
 
     const dispatcher = serverQueue.connection

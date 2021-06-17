@@ -18,8 +18,7 @@ class Vote extends Command {
     }
 
     execute(message, args) {
-        let res = super.execute(message, args);
-        if (res) return;
+        super.execute(message, args);
 
         return pollEmbed(message, this.args[0], this.args[1], this.args[2]);
     }

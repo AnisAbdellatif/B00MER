@@ -11,8 +11,7 @@ class Serverinfo extends Command {
     }
 
     execute(message, args) {
-        let res = super.execute(message, args);
-        if (res) return;
+        super.execute(message, args);
 
         let sicon = message.guild.iconURL();
         let serverembed = new MessageEmbed()

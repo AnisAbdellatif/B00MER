@@ -13,8 +13,7 @@ class Bitcoin extends Command {
     }
 
     execute(message, args) {
-        let res = super.execute(message, args);
-        if (res) return;
+        super.execute(message, args);
 
         request(
             "https://api.coindesk.com/v1/bpi/currentprice.json",

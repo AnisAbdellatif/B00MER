@@ -9,8 +9,7 @@ class getRole extends Command {
     }
 
     async execute(message, args) {
-        let res = super.execute(message, args);
-        if (res) return;
+        super.execute(message, args);
 
         guildDB = await message.client.keyv.get(message.guild.id);
         let role;

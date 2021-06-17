@@ -11,8 +11,7 @@ class Unmute extends Command {
     }
 
     execute(message, args) {
-        let res = super.execute(message, args);
-        if (res) return;
+        super.execute(message, args);
 
         const channel = message.member.voice.channel;
         for (let member of channel.members) {

@@ -16,8 +16,7 @@ class Dmall extends Command {
     }
 
     async execute(message, args) {
-        let res = super.execute(message, args);
-        if (res) return;
+        super.execute(message, args);
 
         if (message.channel.type != "text") {
             message.channel.send(

@@ -10,8 +10,7 @@ class setRole extends Command {
     }
 
     async execute(message, args) {
-        let res = super.execute(message, args);
-        if (res) return;
+        super.execute(message, args);
 
         if (!message.mentions.roles)
             return message.channel.send("You did not mention a proper role!");

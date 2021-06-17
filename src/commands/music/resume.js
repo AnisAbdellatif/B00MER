@@ -1,4 +1,5 @@
 import Command from "../../Command.js";
+import Logger from "../../Logger.js";
 
 class Resume extends Command {
     constructor() {
@@ -9,8 +10,8 @@ class Resume extends Command {
     }
 
     execute(message, args) {
-        let res = super.execute(message, args);
-        if (res) return;
+        super.execute(message, args);
+        Logger.debug("test");
 
         const serverQueue = message.client.serverQueue;
 
