@@ -40,4 +40,4 @@ winston.addColors({
     debug: "green",
 });
 
-export default logger;
+export default process.env.NODE_ENV == "dev" ? logger : console;
