@@ -7,6 +7,7 @@ class Move extends Command {
         super({
             name: "move",
             description: "Move a song up in the queue.",
+            usage: "[old song rank] [new song rank]",
         });
     }
 

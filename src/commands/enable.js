@@ -5,7 +5,7 @@ class Enable extends Command {
         super({
             name: "enable",
             description: "Enable a Command",
-            usage: "enable [command name]",
+            usage: "[command name]",
             dm: true,
             dev: true,
         });

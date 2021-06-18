@@ -4,7 +4,9 @@ class setRole extends Command {
     constructor() {
         super({
             name: "setRole",
-            description: "test cmd",
+            description:
+                "Sets the minimum role required to manage music in the server.",
+            usage: "[@tag of the new role]",
             permissions: ["MANAGE_GUILD", "MANAGE_ROLES"],
         });
     }

@@ -6,7 +6,7 @@ class Dmall extends Command {
         super({
             name: "dmall",
             description: "Send dms to all members of the serve.",
-            usage: "dmall <message>",
+            usage: "<message>",
             permisions: ["MENTION_EVERYONE"],
         });
     }

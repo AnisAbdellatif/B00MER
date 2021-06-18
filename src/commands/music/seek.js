@@ -6,6 +6,7 @@ class Seek extends Command {
         super({
             name: "seek",
             description: "Seek ahead in a song.",
+            usage: "[number of seconds to seek ahead]",
         });
     }
 

@@ -5,7 +5,9 @@ class Clear extends Command {
     constructor() {
         super({
             name: "clear",
-            description: "Clears all the messages in the current channel.",
+            description:
+                "Clears messages in the current channel. (deletes all if not specified)",
+            usage: "([number of messages to delete])",
             permissions: ["MANAGE_MESSAGES"],
             botpermissions: ["MANAGE_MESSAGES"],
             dev: true,

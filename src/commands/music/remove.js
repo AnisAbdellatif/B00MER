@@ -6,6 +6,7 @@ class Remove extends Command {
         super({
             name: "remove",
             description: "Remove song from queue.",
+            usage: "[rank of the song to be removed]",
             argsRules: {
                 songRank: "required|integer",
             },

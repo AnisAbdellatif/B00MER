@@ -5,6 +5,7 @@ class SkipTo extends Command {
         super({
             name: "skipTo",
             description: "Skip to certain song.",
+            usage: "[rank of song to skip to]",
         });
     }
 

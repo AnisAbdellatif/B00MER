@@ -9,6 +9,7 @@ class Play extends Command {
         super({
             name: "play",
             description: "Play a song.",
+            usage: "[song name(s)] (if multiple songs seperate them with '|')",
             argsRules: {
                 songName: "required|array",
             },

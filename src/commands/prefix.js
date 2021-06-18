@@ -5,7 +5,7 @@ class Prefix extends Command {
         super({
             name: "prefix",
             description: "Changes the prefix used in commands.",
-            usage: "prefix <new prefix>",
+            usage: "<new prefix>",
             permissions: ["ADMINISTRATOR"],
         });
     }

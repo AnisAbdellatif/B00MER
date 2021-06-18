@@ -7,7 +7,7 @@ class Help extends Command {
             name: "help",
             description:
                 "List all of my commands or info about a specific command.",
-            usage: "help ([command name])",
+            usage: "([command name])",
             dm: true,
         });
     }

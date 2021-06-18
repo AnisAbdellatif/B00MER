@@ -4,7 +4,8 @@ class Volume extends Command {
     constructor() {
         super({
             name: "volume",
-            description: "Set player Volume.",
+            description: "Show/Set player Volume.",
+            usage: "([new volume value])",
             argsRules: {
                 volume: "integer|min:0|max:100",
             },

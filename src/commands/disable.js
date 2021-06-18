@@ -5,7 +5,7 @@ class Disable extends Command {
         super({
             name: "disable",
             description: "Disable a Command.",
-            usage: "disable [command name]",
+            usage: "[command name]",
             dm: true,
             dev: true,
         });
