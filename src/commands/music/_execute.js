@@ -8,13 +8,14 @@ const f = async (message, args, seek) => {
     const song = serverQueue.songs[0];
     if (!song) return;
 
-    const stream = ytdl(song.url, {
-        quality: "highestaudio",
-    });
+    // const stream = ytdl(song.url, {
+    //     quality: "highestaudio",
+    // });
+    const stream = ytdl(song.url);
 
     const dispatcher = serverQueue.connection
         .play(stream, {
-            highWaterMark: 20,
+            highWaterMark: 25,
             seek: seek,
         })
         .on("finish", () => {

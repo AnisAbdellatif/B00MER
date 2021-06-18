@@ -26,15 +26,15 @@ class Lyrics extends Command {
         super.execute(message, args);
 
         const serverQueue = message.client.serverQueue;
-        let query = this.args.query;
 
-        if (!query) {
+        if (!this.args.query) {
             if (!serverQueue || serverQueue.songs.length == 0) {
                 return message.channel.send("No songs in queue!");
             }
             query = serverQueue.songs[0].title;
         }
 
+        let query = this.args.query;
         if (query.indexOf("[") > -1)
             query = query.substring(0, query.indexOf("["));
         const artist = query.split("-")[0].trim();
