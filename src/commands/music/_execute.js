@@ -15,7 +15,7 @@ const f = async (message, args, seek) => {
     const dispatcher = serverQueue.connection
         .play(stream, {
             highWaterMark: 20,
-            seek: 0,
+            seek: seek,
         })
         .on("finish", () => {
             serverQueue.songs.shift();
