@@ -23,6 +23,7 @@ class Music extends Command {
             description: cmdDesc,
             aliases: [...subCommands.keys()],
         });
+        this.children = subCommands;
     }
 
     async execute(message, args) {

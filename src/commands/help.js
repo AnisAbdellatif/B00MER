@@ -1,4 +1,5 @@
 import Command from "../Command.js";
+import Logger from "../Logger.js";
 
 class Help extends Command {
     constructor() {
@@ -54,10 +55,16 @@ class Help extends Command {
         }
 
         const name = this.args[0].toLowerCase();
-        const command = commands.get(name);
+        let command = commands.get(name);
 
         if (!command) {
-            return message.reply("that's not a valid command!");
+            command = message.client.commands.find(
+                (cmd) => cmd.aliases && cmd.aliases.includes(name)
+            );
+            if (!command) {
+                return message.reply("that's not a valid command!");
+            }
+            command = command.children.get(name);
         }
 
         data.push(`<Name>: ${command.name}`);

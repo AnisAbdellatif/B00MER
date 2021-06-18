@@ -19,7 +19,7 @@ const TimestampColorFormat = winston.format((info, opts) => {
 
 const errorStackFormat = winston.format((info) => {
     if (info.stack) {
-        info.message = info.stack.slice(7);
+        info.message = info.stack.slice(info.stack.indexOf(":") + 2);
     }
     return info;
 });

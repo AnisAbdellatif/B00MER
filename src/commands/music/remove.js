@@ -12,6 +12,15 @@ class Remove extends Command {
         });
     }
 
+    treatArgs(args) {
+        if (args) {
+            return {
+                songRank: args,
+            };
+        }
+        return;
+    }
+
     execute(message, args) {
         super.execute(message, args);
 
