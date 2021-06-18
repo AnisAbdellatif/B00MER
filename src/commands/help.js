@@ -37,7 +37,7 @@ class Help extends Command {
                 `\nYou can send \`${prefix}help [command name]\` to get info on a specific command!`
             );
 
-            return message.channel
+            return message.author
                 .send(data)
                 .then(() => {
                     if (message.channel.type === "dm") return;
@@ -81,7 +81,7 @@ class Help extends Command {
             );
 
         // data.push(`**Cooldown:** ${command.cooldown || 3} second(s)`);
-        message.author.send(data, { split: true });
+        message.channel.send(data, { split: true });
     }
 }
 
