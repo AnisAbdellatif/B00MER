@@ -11,10 +11,9 @@ class Resume extends Command {
 
     execute(message, args) {
         super.execute(message, args);
-        Logger.debug("test");
 
         const serverQueue = message.client.serverQueue;
-
+        Logger.debug(serverQueue);
         if (!serverQueue)
             return message.reply(
                 "Oida mate, i have no shit to say :zany_face: (no songs)"

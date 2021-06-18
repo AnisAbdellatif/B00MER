@@ -84,7 +84,7 @@ class Play extends Command {
                 "New song added to queue:",
                 serverQueue.songs.length - 1
             );
-            if (serverQueue.songs.length == 1) execute(message, args);
+            if (i == 0) execute(message, args);
         }
     }
 }

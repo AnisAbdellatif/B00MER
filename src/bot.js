@@ -69,13 +69,9 @@ client.on("message", async (message) => {
                 }
                 break;
             } catch (error) {
-                // Logger.error(error);
-                // Logger.warn("Reconnecting to db!");
-                // client.keyv = new Keyv(process.env.DATABASE_URL);
-                // client.keyv.on("error", (err) => {
-                //     Logger.error(`Connection Error: ${err}`);
-                //     process.exit(1);
-                // });
+                Logger.error(error);
+                Logger.warn("Reconnecting to db!");
+                client.keyv = new Keyv(process.env.DATABASE_URL);
             }
         }
     }

@@ -4,7 +4,7 @@ import { config } from "dotenv";
 
 config();
 
-const myFormat = winston.format((info, opts) => {
+const TimestampColorFormat = winston.format((info, opts) => {
     if (info.timestamp) {
         let color = colors.green;
 
@@ -17,15 +17,24 @@ const myFormat = winston.format((info, opts) => {
     }
 });
 
+const errorStackFormat = winston.format((info) => {
+    if (info.stack) {
+        info.message = info.stack.slice(7);
+    }
+    return info;
+});
+
 const logConfiguration = {
     level: process.env.NODE_ENV == "dev" ? "debug" : "info",
     transports: [new winston.transports.Console()],
     format: winston.format.combine(
-        winston.format.colorize({ all: true }),
+        winston.format.errors({ stack: true }),
         winston.format.timestamp({
             format: "MMM-DD-YYYY HH:mm:ss",
         }),
-        myFormat(),
+        TimestampColorFormat(),
+        errorStackFormat(),
+        winston.format.colorize({ all: true }),
         winston.format.printf(
             (info) => `${[info.timestamp]} ${info.level}: ${info.message}`
         )

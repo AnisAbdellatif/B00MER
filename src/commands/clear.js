@@ -21,7 +21,7 @@ class Clear extends Command {
                 await message.channel.messages.fetch({ limit: n }, true, true);
                 const messages = await message.channel.bulkDelete(n, true);
                 Logger.debug(
-                    `deleted ${messages.size} messages from '${mesage.guild.name}'!`
+                    `deleted ${messages.size} messages from '${message.guild.name}'!`
                 );
                 if (
                     this.args[0] ||
