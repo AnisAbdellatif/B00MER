@@ -36,7 +36,7 @@ class Score extends Command {
         };
         let MG =
             (3 * this.args.MATH +
-                4 * this.args.PHY +
+                3 * this.args.PHY +
                 3 * this.args.TECH +
                 1 * this.args.INF +
                 1 * this.args.AR +
@@ -45,7 +45,7 @@ class Score extends Command {
                 1 * this.args.PH +
                 1 * (this.args.OPTION - 10) +
                 1 * this.args.SPORT) /
-            16;
+            15;
         MG = MG.toFixed(2);
         let score =
             5 * MG +
