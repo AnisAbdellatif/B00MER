@@ -71,26 +71,34 @@ client.on("message", async (message) => {
     const args = message.content.slice(prefix.length).trim().split(/ +/);
     const commandName = args.shift().toLowerCase();
 
-    try {
-        let command = client.commands.get(commandName);
+    while (true) {
+        try {
+            let command = client.commands.get(commandName);
 
-        if (!command) {
-            command = client.commands.find(
-                (cmd) => cmd.aliases && cmd.aliases.includes(commandName)
-            );
-            if (!command) throw new Errors.CommandNotFound();
-            command.calledBy = commandName;
+            if (!command) {
+                command = client.commands.find(
+                    (cmd) => cmd.aliases && cmd.aliases.includes(commandName)
+                );
+                if (!command) throw new Errors.CommandNotFound();
+                command.calledBy = commandName;
+            }
+            await command.execute(message, args);
+            break;
+        } catch (error) {
+            Logger.error(error);
+
+            if (error instanceof Errors.CustomError) {
+                message.reply(error.message);
+            } else if (error.hasOwnProperty("sqlState")) {
+                Logger.warn("Reconnecting to db!");
+                client.keyv = new Keyv(process.env.DATABASE_URL);
+            } else {
+                message.reply(
+                    "An error occured while trying to execute that command!"
+                );
+                break;
+            }
         }
-        await command.execute(message, args);
-    } catch (error) {
-        if (error instanceof Errors.CustomError) {
-            message.reply(error.message);
-        } else {
-            message.reply(
-                "An error occured while trying to execute that command!"
-            );
-        }
-        Logger.error(error);
     }
 });
 
