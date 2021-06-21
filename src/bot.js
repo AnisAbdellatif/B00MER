@@ -14,7 +14,8 @@ const client = new Client();
 client.keyv = new Keyv(process.env.DATABASE_URL);
 client.keyv.on("error", (err) => {
     Logger.error(`Connection Error: ${err}`);
-    process.exit(1);
+    Logger.warn("Reconnecting to db!");
+    client.keyv = new Keyv(process.env.DATABASE_URL);
 });
 
 client.guildConfig = {
