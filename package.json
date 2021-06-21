@@ -19,11 +19,11 @@
         "dotenv": "^10.0.0",
         "ffmpeg-static": "4.3.0",
         "genius-lyrics-api": "^3.0.6",
+        "got": "^9.6.0",
         "html-entities": "^2.3.2",
         "keyv": "^4.0.3",
         "popyt": "^5.0.0",
         "pretty-ms": "^7.0.1",
-        "request": "^2.88.2",
         "validatorjs": "^3.22.1",
         "winston": "^3.3.3",
         "ytdl-core": "^4.8.2"

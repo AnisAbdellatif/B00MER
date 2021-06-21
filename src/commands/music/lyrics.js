@@ -29,7 +29,7 @@ class Lyrics extends Command {
 
         if (!this.args.query) {
             if (!serverQueue || serverQueue.songs.length == 0) {
-                return message.channel.send("No songs in queue!");
+                throw new this.Errors.SongNameNotSpecified();
             }
             query = serverQueue.songs[0].title;
         }

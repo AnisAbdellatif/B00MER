@@ -27,17 +27,13 @@ class Remove extends Command {
 
         const serverQueue = message.client.serverQueue;
         if (!message.member.voice.channel)
-            return message.channel.send(
-                "You have to be in a voice channel to remove a song!"
-            );
-        else if (!serverQueue)
-            return message.channel.send(
-                "There is no song that I could remove!"
-            );
+            throw new this.Errors.MemberNotInVoiceChannel();
+        else if (!serverQueue) throw new this.Errors.EmptyQueue();
 
         const rank = this.args.songRank;
-        if (!(serverQueue.songs.length > rank && rank >= 0)) {
-            return message.channel.send("Verify the number you inserted!");
+        if (isNaN(rank)) throw new this.Errors.NumberUnvalid("NaN");
+        else if (!(serverQueue.songs.length > rank && rank >= 0)) {
+            throw new this.Errors.NumberUnvalid("range");
         } else if (rank == 0) {
             return skip.execute(message, args);
         } else {

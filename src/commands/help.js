@@ -1,5 +1,4 @@
 import Command from "../Command.js";
-import Logger from "../Logger.js";
 
 class Help extends Command {
     constructor() {
@@ -62,7 +61,7 @@ class Help extends Command {
                 (cmd) => cmd.aliases && cmd.aliases.includes(name)
             );
             if (!command) {
-                return message.reply("that's not a valid command!");
+                throw new this.Errors.CommandNotFound();
             }
             command = command.children.get(name);
         }

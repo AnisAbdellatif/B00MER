@@ -1,5 +1,6 @@
 import Validator from "validatorjs";
 
+import Logger from "./Logger.js";
 import * as Errors from "./customErrors.js";
 
 class Command {
@@ -15,42 +16,33 @@ class Command {
         }
 
         if (message.client.botConfig.disabledCmds.includes(this.name)) {
-            throw new Errors.DisabledCmdError(
-                `Sorry, this command is currently disabled by the developer \:pleading_face:\nFor more information contact <@${message.client.dev}>`
-            );
+            throw Errors.DisabledCmdError();
         } else if (message.channel.type == "dm" && !this.dm) {
-            throw new Errors.DmChannelError(
-                "I can only execute this command inside a server! :wink:"
-            );
+            throw Errors.DmChannelError();
         } else if (this.dev && message.author.id != message.client.dev) {
-            throw new Errors.DevelopperError(
-                `You are not allowed to do that -_- Ask <@${message.client.dev}> to do it.`
-            );
+            throw Errors.DevelopperError();
         } else if (
             this.permissions &&
             !message.member.hasPermission(this.permissions)
         ) {
-            throw new Errors.UserPermissionError(
-                `You don't have permission to execute that command!`
-            );
+            throw Errors.UserPermissionError();
         } else if (
             this.botpermissions &&
             !message.guild
                 .member(message.client.user)
                 .hasPermission(this.permissions)
         ) {
-            throw new Errors.BotPermissionError(
-                `Give me the permission to execute that command!`
-            );
+            throw Errors.BotPermissionError();
         } else if (this.argsRules) {
             let val = new Validator(this.args, this.argsRules);
             if (val.fails()) {
                 // console.log(val.errors.all());
-                throw new Errors.ArgumentsError(
-                    `Error in command arguments! Check $help for more info.`
-                );
+                throw Errors.ArgumentsError();
             }
         }
+
+        this.Logger = Logger;
+        this.Errors = Errors;
     }
 }
 

@@ -1,5 +1,4 @@
 import Command from "../Command.js";
-import Logger from "../Logger.js";
 
 class Dmall extends Command {
     constructor() {
@@ -33,11 +32,8 @@ class Dmall extends Command {
                 await member.user.send(this.args);
                 members_success.push(member.user.username);
             } catch (error) {
-                Logger.error(
-                    `Could not send DM to ${member.user.username} in a request in ${message.guild.name} (${message.guild.id}).\n`,
-                    error
-                );
                 members_error.push(member.user.username);
+                throw new this.Errors.DmInability(member.user.id);
             }
         });
         Promise.all(f).then(() => {
@@ -51,8 +47,8 @@ class Dmall extends Command {
                     `The message didn\'t reach those people:\n ${members_error}`
                 );
             }
-            Logger.debug(`success: ${members_success}`);
-            Logger.debug(`failure: ${members_error}`);
+            this.Logger.debug(`success: ${members_success}`);
+            this.Logger.debug(`failure: ${members_error}`);
         });
     }
 }

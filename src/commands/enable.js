@@ -18,7 +18,7 @@ class Enable extends Command {
         const botConfig = message.client.botConfig;
 
         if (!command) {
-            return message.reply("that's not a valid command!");
+            throw new this.Errors.CommandNotFound();
         } else if (!botConfig.disabledCmds.includes(command.name)) {
             return message.reply(`Command: ${command.name} enabled!`);
         }

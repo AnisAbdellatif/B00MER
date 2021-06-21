@@ -16,7 +16,7 @@ class Move extends Command {
 
         const serverQueue = message.client.serverQueue;
         if (isNaN(this.args[0]) || isNaN(this.args[1]))
-            return message.channel.send("Enter a valid number!");
+            throw new this.Errors.NumberUnvalid("NaN");
 
         songRank = parseInt(this.args[0]);
         newSongRank = parseInt(this.args[1]);
@@ -26,7 +26,7 @@ class Move extends Command {
             newSongRank < 1 ||
             newSongRank > serverQueue.songs.length - 1
         )
-            return message.channel.send("Number out of range!");
+            throw new this.Errors.NumberUnvalid("range");
 
         mutate(serverQueue.songs, songRank, newSongRank);
         return message.channel.send(

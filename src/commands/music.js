@@ -57,18 +57,7 @@ class Music extends Command {
 
         const command = subCommands.get(commandName);
         if (!command) {
-            return message.reply(
-                `This command sadly does not exist! \:face_with_monocle:`
-            );
-        }
-
-        if (
-            command.permissions &&
-            !message.member.hasPermission(command.permissions)
-        ) {
-            return message.reply(
-                `You don't have permission to execute that command!`
-            );
+            throw new this.Errors.CommandNotFound();
         }
 
         await command.execute(message, args);

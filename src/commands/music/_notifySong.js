@@ -1,11 +1,11 @@
 import { MessageEmbed } from "discord.js";
-
+import * as Errors from "../../customErrors.js";
 import getPlayTime from "./_getPlayTime.js";
 
 export default async (message, title, rank = 0) => {
     const serverQueue = message.client.serverQueue;
     if (!serverQueue || serverQueue.songs.length == 0) {
-        return message.channel.send("Queue is empty!");
+        throw new Errors.EmptyQueue();
     }
 
     const song = serverQueue.songs[rank];

@@ -14,8 +14,7 @@ class setRole extends Command {
     async execute(message, args) {
         super.execute(message, args);
 
-        if (!message.mentions.roles)
-            return message.channel.send("You did not mention a proper role!");
+        if (!message.mentions.roles) throw new this.Errors.ArgumentsError();
 
         let guild = await message.client.keyv.get(message.guild.id);
         let role;
@@ -29,7 +28,7 @@ class setRole extends Command {
 
         await message.client.keyv.set(message.guild.id, guild);
         return message.reply(
-            `music role is set as: ${
+            `Music role is set as: ${
                 role ? "<@&" + role.id + ">" : "@everyone"
             } !`
         );

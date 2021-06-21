@@ -19,7 +19,7 @@ class Prefix extends Command {
                 `The bot prefix is: ${client.guildConfig.prefix}`
             );
 
-        let guild = await client.keyv.get(message.guild.id);
+        let guild = await client.guildsDB.get(message.guild.id);
         if (!this.args.length) {
             return message.channel.send(
                 `The current prefix is: ${guild.prefix}`
@@ -27,6 +27,7 @@ class Prefix extends Command {
         } else {
             guild.prefix = this.args.join(" ");
             await client.keyv.set(message.guild.id, guild);
+            await client.guildsDB.set(message.guild.id, guild);
 
             return message.channel.send(
                 `The prefix was changed to: '${this.args.join(" ")}'`

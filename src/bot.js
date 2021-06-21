@@ -3,12 +3,13 @@ import { readdirSync } from "fs";
 import Keyv from "keyv";
 
 import { Client, Collection } from "discord.js";
-const client = new Client();
 
 config();
 
 import Logger from "./Logger.js";
 import * as Errors from "./customErrors.js";
+
+const client = new Client();
 
 client.keyv = new Keyv(process.env.DATABASE_URL);
 client.keyv.on("error", (err) => {
@@ -41,11 +42,13 @@ client.on("ready", async () => {
     }
 
     await client.keyv.set("guildConfig", client.guildConfig);
+    client.guildsDB = new Map();
 
     // List servers the bot is connected to
     Logger.info("Servers:");
-    client.guilds.cache.each((guild) => {
+    client.guilds.cache.each(async (guild) => {
         Logger.info(`   -- ${guild.name} - ${guild.id}`);
+        client.guildsDB.set(guild.id, await client.keyv.get(guild.id));
     });
 
     client.user.setActivity(`Type ${client.guildConfig.prefix}help`);
@@ -58,22 +61,8 @@ client.on("message", async (message) => {
     if (message.channel.type != "text") {
         prefix = client.guildConfig.prefix;
     } else {
-        while (true) {
-            try {
-                let guildDB = await client.keyv.get(message.guild.id);
-                if (!guildDB) {
-                    await client.keyv.set(message.guild.id, client.guildConfig);
-                    prefix = client.guildConfig.prefix;
-                } else {
-                    prefix = guildDB.prefix;
-                }
-                break;
-            } catch (error) {
-                Logger.error(error);
-                Logger.warn("Reconnecting to db!");
-                client.keyv = new Keyv(process.env.DATABASE_URL);
-            }
-        }
+        let guildDB = await client.guildsDB.get(message.guild.id);
+        prefix = guildDB.prefix;
     }
 
     if (message.author.bot || !message.content.startsWith(prefix)) return;
@@ -88,23 +77,19 @@ client.on("message", async (message) => {
             command = client.commands.find(
                 (cmd) => cmd.aliases && cmd.aliases.includes(commandName)
             );
-            if (!command)
-                return message.reply(
-                    `This command sadly does not exist! \:face_with_monocle:`
-                );
+            if (!command) throw new Errors.CommandNotFound();
             command.calledBy = commandName;
         }
-        try {
-            await command.execute(message, args);
-        } catch (error) {
-            if (error instanceof Errors.CustomError) {
-                message.reply(error.message);
-            }
-            Logger.error(error);
-        }
+        await command.execute(message, args);
     } catch (error) {
+        if (error instanceof Errors.CustomError) {
+            message.reply(error.message);
+        } else {
+            message.reply(
+                "An error occured while trying to execute that command!"
+            );
+        }
         Logger.error(error);
-        message.reply("An error occured while trying to execute that command!");
     }
 });
 
@@ -115,6 +100,7 @@ client.on("guildCreate", async (guild) => {
         }>`
     );
     await client.keyv.set(guild.id, client.guildConfig);
+    await client.guildsDB.set(guild.id, client.guildConfig);
 });
 
 client.on("guildDelete", async (guild) => {
@@ -124,6 +110,7 @@ client.on("guildDelete", async (guild) => {
         }>`
     );
     await client.keyv.delete(guild.id);
+    await client.guildsDB.delete(guild.id);
 });
 
 client.login(process.env.DISCORD_BOT_TOKEN);

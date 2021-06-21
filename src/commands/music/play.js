@@ -45,13 +45,9 @@ class Play extends Command {
             } else {
                 voiceChannel = message.member.voice.channel;
                 if (!voiceChannel) {
-                    return message.reply(
-                        "You need to be in a voice channel to play music!"
-                    );
+                    throw new this.Errors.MemberNotInVoiceChannel();
                 } else if (!voiceChannel.joinable || !voiceChannel.speakable) {
-                    return message.reply(
-                        "I need the permissions to join and speak in your voice channel!"
-                    );
+                    throw new this.Errors.BotPermissionError();
                 }
             }
 
@@ -68,6 +64,10 @@ class Play extends Command {
             };
 
             queueContruct.connection = await voiceChannel.join();
+            queueContruct.connection.on("disconnect", () => {
+                console.log("Bot disconnected!");
+                message.client.queue.delete(message.guild.id);
+            });
 
             await message.client.queue.set(message.guild.id, queueContruct);
             message.client.serverQueue = queueContruct;
