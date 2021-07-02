@@ -89,6 +89,7 @@ client.on("message", async (message) => {
 
             if (error instanceof Errors.CustomError) {
                 message.reply(error.message);
+                break;
             } else if (error.hasOwnProperty("sqlState")) {
                 Logger.warn("Reconnecting to db!");
                 client.keyv = new Keyv(process.env.DATABASE_URL);
